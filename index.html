@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chatterbox</title>
+    <link rel="stylesheet" href="css/reset.css">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+    <!-- ユーザー認証 -->
+    <div id="auth-container">
+        <h2>ログイン</h2>
+        <input type="email" id="email" placeholder="メールアドレス">
+        <input type="password" id="password" placeholder="パスワード">
+        <button id="login-btn">ログイン</button>
+        <button id="register-btn">新規登録</button>
+        <button id="logout-btn">ログアウト</button>
+        <!-- ログイン状態を表示 -->
+        <div id="auth-status"></div>
+    </div>
+
+    <h1>チャットアプリ</h1>
+    <!-- コンテンツ表示画面 -->
+    <div id="chat-container" style="display: none;"> <!-- 初期状態は非表示 -->
+        <!-- 各場所にidを設定しましょう -->
+        <input type="text" id="uname" placeholder="名前を入力してください" disabled>
+        <textarea id="text" placeholder="文章を入力してください" disabled></textarea>
+        <button id="send" disabled>送信</button>
+        <div id="output"></div> <!-- チャット表示エリア -->
+    </div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script type="module">
+
+        // Firebase SDKをインポート
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.1.0/firebase-app.js";
+        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, onAuthStateChanged } 
+            from "https://www.gstatic.com/firebasejs/9.1.0/firebase-auth.js";
+        import { getDatabase, ref, push, set, onChildAdded, remove } 
+            from "https://www.gstatic.com/firebasejs/9.1.0/firebase-database.js";
+
+        // Your web app's Firebase configuration 
+        const firebaseConfig = {
+            apiKey:
+        };
+
+        // Firebaseの初期化
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app); // Authenticationの初期化
+        const db = getDatabase(app); // RealtimeDBの初期化
+        const dbRef = ref(db, "chat"); // RealtimeDB内の"chat"ノードを参照
+
+        // ログイン処理
+        document.getElementById("login-btn").addEventListener("click", async () => {
+            const email = document.getElementById("email").value;
+            const password = document.getElementById("password").value;
+
+            try {
+                const userCredential = await signInWithEmailAndPassword(auth, email, password);
+                console.log("ログイン成功:", userCredential.user);
+                alert("ログイン成功！");
+            } catch (error) {
+                console.error("ログインエラー:", error.message);
+                alert("ログインに失敗しました：" + error.message);
+            }
+        });
+
+        // 新規登録処理
+        document.getElementById("register-btn").addEventListener("click", async () => {
+            const email = document.getElementById("email").value;
+            const password = document.getElementById("password").value;
+
+            try {
+                const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+                console.log("ユーザー登録成功:", userCredential.user);
+                alert("新規登録成功！");
+            } catch (error) {
+                console.error("新規登録エラー:", error.message);
+                alert("新規登録に失敗しました：" + error.message);
+            }
+        });
+
+        // ログアウト処理
+        document.getElementById("logout-btn").addEventListener("click", async () => {
+            try {
+                await signOut(auth);
+                console.log("ログアウト成功");
+                alert("ログアウトしました！");
+            } catch (error) {
+                console.error("ログアウトエラー:", error.message);
+                alert("ログアウトに失敗しました：" + error.message);
+            }
+        });
+
+        // ログイン状態の監視
+        onAuthStateChanged(auth, (user) => {
+            const statusMessage = document.getElementById("auth-status"); // ログイン状態を表示する要素
+            const chatContainer = document.getElementById("chat-container"); // チャットコンテナ
+            if (user) {
+                // ログイン中の処理
+                console.log("現在ログイン中のユーザー:", user.email);
+                statusMessage.textContent = `ログイン中: ${user.email}`;
+                chatContainer.style.display = "block"; // チャットを表示
+                // チャット機能を有効化
+                document.getElementById("send").disabled = false; 
+                document.getElementById("uname").disabled = false; 
+                document.getElementById("text").disabled = false; 
+            } else {
+                // ログアウト時の処理
+                console.log("ログアウトしています");
+                statusMessage.textContent = "ログインしてください";
+                chatContainer.style.display = "none"; // チャットを非表示
+                // チャット機能を無効化
+                document.getElementById("send").disabled = true; 
+                document.getElementById("uname").disabled = true; 
+                document.getElementById("text").disabled = true; 
+            }
+        });
+
+        // データ送信
+        $("#send").on("click", function() {
+            const msg = {
+                uname: $("#uname").val(),
+                text: $("#text").val()
+            };
+            const newPostRef = push(dbRef); // 新しいノードを作成
+            set(newPostRef, msg); // 作成したノードにデータを保存
+
+            // 入力欄をクリア
+            $("#uname").val("");
+            $("#text").val("");
+        });
+
+        // データ取得（リアルタイムに反映）
+        onChildAdded(dbRef, function(data) {
+            const msg = data.val(); // メッセージ内容を取得
+            const key = data.key; // ユニークキーを取得
+
+            const h = `
+            <div class="box">
+                <p>${msg.uname}</p>
+                <span class="remove" data-key="${key}">削除ボタンだよ😄</span>
+                <p>${msg.text}</p>
+            </div>
+            `;
+            $("#output").append(h); // 表示エリアに追加
+        });
+
+        // データ削除
+        $("#output").on("click", ".remove", function() {
+            const key = $(this).attr("data-key"); // クリックされたアイコンのキーを取得
+            const removeItem = ref(db, "chat/" + key); // 削除対象の参照を取得
+
+            remove(removeItem).then(() => {
+                console.log("削除成功:", key);
+                $(this).closest(".box").remove(); // 画面から削除
+            }).catch(error => {
+                console.error("削除エラー:", error);
+            });
+        });
+    </script>
+</body>
+
+</html>
