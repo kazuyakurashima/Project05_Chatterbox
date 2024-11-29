@@ -14,6 +14,7 @@
 
     <!-- ユーザー認証 -->
     <div id="auth-container">
+        
         <h2>ログイン</h2>
         <input type="email" id="email" placeholder="メールアドレス">
         <input type="password" id="password" placeholder="パスワード">
@@ -31,7 +32,7 @@
         <input type="text" id="uname" placeholder="名前を入力してください">
         <textarea id="text" placeholder="文章を入力してください"></textarea>
         <button id="send">送信</button>
-        <div id="output"></div> <!-- チャット表示エリア -->
+        <div id="output"></div> 
     </div>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
@@ -41,19 +42,22 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.1.0/firebase-app.js";
         import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, onAuthStateChanged } 
             from "https://www.gstatic.com/firebasejs/9.1.0/firebase-auth.js";
+            // 認証のためにimportした
         import { getDatabase, ref, push, set, onChildAdded, remove } 
             from "https://www.gstatic.com/firebasejs/9.1.0/firebase-database.js";
 
-        // Your web app's Firebase configuration 
-        const firebaseConfig = {
-            apiKey:
-        };
+            // Your web app's Firebase configuration 
+            const firebaseConfig = {
+            apiKey: "AIzaSyC
+            };
 
         // Firebaseの初期化
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app); // Authenticationの初期化
+            // 認証の準備
         const db = getDatabase(app); // RealtimeDBの初期化
         const dbRef = ref(db, "chat"); // RealtimeDB内の"chat"ノードを参照
+
 
         // ログイン処理
         document.getElementById("login-btn").addEventListener("click", async () => {
