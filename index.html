@@ -24,13 +24,13 @@
         <div id="auth-status"></div>
     </div>
 
-    <h1>チャットアプリ</h1>
     <!-- コンテンツ表示画面 -->
-    <div id="chat-container" style="display: none;"> <!-- 初期状態は非表示 -->
+    <div id="chat-container"> 
+        <h1>チャットアプリ</h1>
         <!-- 各場所にidを設定しましょう -->
-        <input type="text" id="uname" placeholder="名前を入力してください" disabled>
-        <textarea id="text" placeholder="文章を入力してください" disabled></textarea>
-        <button id="send" disabled>送信</button>
+        <input type="text" id="uname" placeholder="名前を入力してください">
+        <textarea id="text" placeholder="文章を入力してください"></textarea>
+        <button id="send">送信</button>
         <div id="output"></div> <!-- チャット表示エリア -->
     </div>
 
@@ -115,10 +115,6 @@
                 console.log("ログアウトしています");
                 statusMessage.textContent = "ログインしてください";
                 chatContainer.style.display = "none"; // チャットを非表示
-                // チャット機能を無効化
-                document.getElementById("send").disabled = true; 
-                document.getElementById("uname").disabled = true; 
-                document.getElementById("text").disabled = true; 
             }
         });
 
