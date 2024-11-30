@@ -49,7 +49,8 @@
 
             // Your web app's Firebase configuration 
             const firebaseConfig = {
-            apiKey: "AIza
+            apiKey: "AIzaSyC
+
 
         // Firebaseの初期化
         const app = initializeApp(firebaseConfig);
@@ -60,49 +61,49 @@
 
 
         // ログイン処理
-        document.getElementById("login-btn").addEventListener("click", async () => {
+        document.getElementById("login-btn").addEventListener("click", async function()  {
+            // asyncは”非同期処理”を明示。このあとawaitが来る予告
             const email = document.getElementById("email").value;
             const password = document.getElementById("password").value;
-
             try {
                 const userCredential = await signInWithEmailAndPassword(auth, email, password);
-                console.log("ログイン成功:", userCredential.user);
+                // firebaseで、メアド・パスが認証されれば、userCredentialに、それらがオブジェクトで代入
+                // awaitによって、認証の返事を待っている。これないと直ぐにerror表示してしまう。
                 alert("ログイン成功！");
             } catch (error) {
-                console.error("ログインエラー:", error.message);
-                alert("ログインに失敗しました：" + error.message);
+                alert("ログインに失敗しました");
             }
         });
+            // if,elseだと、認証できないという例外が処理できずにコードが止まる
+            // try,catchだと、認証できないという例外をerrorとして処理できる
 
         // 新規登録処理
-        document.getElementById("register-btn").addEventListener("click", async () => {
+        document.getElementById("register-btn").addEventListener("click", async function() {
             const email = document.getElementById("email").value;
             const password = document.getElementById("password").value;
 
             try {
                 const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-                console.log("ユーザー登録成功:", userCredential.user);
                 alert("新規登録成功！");
             } catch (error) {
-                console.error("新規登録エラー:", error.message);
-                alert("新規登録に失敗しました：" + error.message);
+                alert("新規登録に失敗しました：");
             }
         });
 
         // ログアウト処理
-        document.getElementById("logout-btn").addEventListener("click", async () => {
+        document.getElementById("logout-btn").addEventListener("click", async function() {
             try {
                 await signOut(auth);
-                console.log("ログアウト成功");
                 alert("ログアウトしました！");
+                // signOutで認証を取り消し！
             } catch (error) {
-                console.error("ログアウトエラー:", error.message);
-                alert("ログアウトに失敗しました：" + error.message);
+                alert("ログアウトに失敗しました：");
+                // ネットワークエラーなど、firebase側に問題があるときなど（ただし稀）
             }
         });
 
         // ログイン状態の監視
-        onAuthStateChanged(auth, (user) => {
+        onAuthStateChanged(auth, function(user)  {
             const statusMessage = document.getElementById("auth-status"); // ログイン状態を表示する要素
             const chatContainer = document.getElementById("chat-container"); // チャットコンテナ
             if (user) {
