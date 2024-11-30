@@ -41,4 +41,18 @@
   1. [https://www.asobou.co.jp/blog/web/firebase-login01](https://www.asobou.co.jp/blog/web/firebase-login01)
   2. https\://www\.asobou.co.jp/blog/web/firebase-login02
      1. この記事の記述と、importがうまく合わずに苦労しました、、、
+  参考にした記事１
+https://www.asobou.co.jp/blog/web/firebase-login01
+ログイン認証の解説記事
+
+参考にした記事２
+https://techmania.jp/blog/javascript-getelementbyid/
+getElementByIdの使い方(jqueryから変更）
+
+参考にした記事3
+https://apricot-design.com/staffblog/javascript%E3%81%AE%E5%90%8C%E6%9C%9F%E5%87%A6%E7%90%86%E3%81%A8%E9%9D%9E%E5%90%8C%E6%9C%9F%E5%87%A6%E7%90%86%E3%82%92%E3%82%84%E3%81%95%E3%81%97%E3%81%8F%E8%A7%A3%E8%AA%AC%E3%81%97%E3%81%BE%E3%81%99/
+同期処理と非同期処理
+
+https://tridentwebdesign.blog.fc2.com/e/promise_async_await
+Promise,async,awaitのまとめ
 

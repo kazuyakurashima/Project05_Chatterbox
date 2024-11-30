@@ -49,7 +49,15 @@
 
             // Your web app's Firebase configuration 
             const firebaseConfig = {
-            apiKey: "AIzaSyC
+            apiKey: "AIzaSyC1J5K0cGe6ylFtcgjb7wsR3JCOVOmRYQg",
+            authDomain: "dev28-2e6bc.firebaseapp.com",
+            databaseURL: "https://dev28-2e6bc-default-rtdb.firebaseio.com",
+            projectId: "dev28-2e6bc",
+            storageBucket: "dev28-2e6bc.firebasestorage.app",
+            messagingSenderId: "480364917670",
+            appId: "1:480364917670:web:8a7a56329105ce8e345567",
+            measurementId: "G-DHWYWDSYY3"
+            };
 
 
         // Firebaseの初期化
@@ -108,16 +116,15 @@
             const chatContainer = document.getElementById("chat-container"); // チャットコンテナ
             if (user) {
                 // ログイン中の処理
-                console.log("現在ログイン中のユーザー:", user.email);
                 statusMessage.textContent = `ログイン中: ${user.email}`;
-                chatContainer.style.display = "block"; // チャットを表示
+                // auth-statusにログイン中とemailが表示
+                chatContainer.style.display = "block"; // チャット（固まり）を表示
                 // チャット機能を有効化
                 document.getElementById("send").disabled = false; 
                 document.getElementById("uname").disabled = false; 
                 document.getElementById("text").disabled = false; 
             } else {
                 // ログアウト時の処理
-                console.log("ログアウトしています");
                 statusMessage.textContent = "ログインしてください";
                 chatContainer.style.display = "none"; // チャットを非表示
             }
